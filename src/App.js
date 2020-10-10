@@ -25,7 +25,7 @@ function App() {
         <Header style={styles.header}>
           <Title level={1} style={{ margin: 10 }}>
             Herogi-StudyCase
-            <img src={logo} style={{ float: "left" }} />
+            <img src={logo} style={{ float: "left", margin: 10 }} />
           </Title>
         </Header>
         <Layout>
