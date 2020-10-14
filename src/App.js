@@ -18,18 +18,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //logo
 import { logo } from "./utils/images/";
 
+import Row from "./components/rows";
+
 const { Header, Footer, Sider, Content } = Layout;
 const { Title } = Typography;
 
 function App() {
-  const [responseData, setResponseData] = useState();
-
-  useEffect(() => {
-    getUsers(setResponseData);
-  }, []);
-
   return (
-    <div className="App">
+    <div className='App'>
       <Layout>
         <Header style={styles.header}>
           <Title level={1} style={{ margin: 10 }}>
@@ -39,8 +35,8 @@ function App() {
         </Header>
         <Layout>
           <Sider
-            breakpoint="lg"
-            collapsedWidth="0"
+            breakpoint='lg'
+            collapsedWidth='0'
             onBreakpoint={(broken) => {
               console.log(broken);
             }}
@@ -48,8 +44,8 @@ function App() {
               console.log(collapsed, type);
             }}
           >
-            <Menu theme="light" mode="inline" defaultSelectedKeys={["bests"]}>
-              <Menu.Item key="bests">
+            <Menu theme='light' mode='inline' defaultSelectedKeys={["bests"]}>
+              <Menu.Item key='bests'>
                 <FontAwesomeIcon
                   style={{
                     marginRight: "20",
@@ -58,7 +54,7 @@ function App() {
                 />
                 Bests
               </Menu.Item>
-              <Menu.Item key="allRunners">
+              <Menu.Item key='allRunners'>
                 <FontAwesomeIcon
                   style={{
                     marginRight: "16",
@@ -67,7 +63,7 @@ function App() {
                 />
                 All Runners
               </Menu.Item>
-              <Menu.Item key="12">
+              <Menu.Item key='12'>
                 <FontAwesomeIcon
                   style={{
                     marginRight: "20",
@@ -79,7 +75,14 @@ function App() {
             </Menu>
           </Sider>
           <Layout>
-            {responseData}
+            <Content>
+              <div>
+                <Row title='This is title' fetchUrl='/users' />
+                {/* <Row title='This is title' fetchUrl='/pace' /> */}
+                {/*responseData.length*/}
+              </div>
+            </Content>
+
             {/* <Footer style={{ textAlign: "center" }}>
               Ant Design ©2020 Created by MahmutYnc
             </Footer> */}
