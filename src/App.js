@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "antd";
 import "./App.css";
 import { Layout, Menu, Typography } from "antd";
+
+//api function
+import { getUsers } from "./api/index";
 
 //icons
 import { UserOutlined } from "@ant-design/icons";
@@ -19,6 +22,12 @@ const { Header, Footer, Sider, Content } = Layout;
 const { Title } = Typography;
 
 function App() {
+  const [responseData, setResponseData] = useState();
+
+  useEffect(() => {
+    getUsers(setResponseData);
+  }, []);
+
   return (
     <div className="App">
       <Layout>
@@ -70,7 +79,7 @@ function App() {
             </Menu>
           </Sider>
           <Layout>
-            <Content>Content</Content>
+            {responseData}
             {/* <Footer style={{ textAlign: "center" }}>
               Ant Design ©2020 Created by MahmutYnc
             </Footer> */}
