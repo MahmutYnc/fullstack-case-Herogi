@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { List, Avatar } from "antd";
 import axios from "../api/axios";
+import $ from "jquery";
 
 function Row({ title, fetchUrl }) {
   const [users, setUsers] = useState([]);
@@ -23,6 +24,10 @@ function Row({ title, fetchUrl }) {
     }
     fetchData();
   }, []);
+  useEffect(() => {
+    const res = $.extend(true, [], pace, users);
+    console.log(res);
+  }, [pace, users]);
 
   return (
     <div>
@@ -40,7 +45,7 @@ function Row({ title, fetchUrl }) {
                 />
               }
               title={<a href='https://herogi.com/'>{item.username}</a>}
-              description='Ant Design, a design language for background applications, is refined by Ant UED Team '
+              description={item.username}
             />
           </List.Item>
         )}
