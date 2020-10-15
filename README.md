@@ -23,3 +23,5 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 # fullstack-case-Herogi
+
+Used Technologies: to retrieve data from server side axios used, Ant design system used for enterprise-level product results.
