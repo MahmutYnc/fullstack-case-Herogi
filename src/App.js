@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "antd";
+import React from "react";
+
 import "./App.css";
 import { Layout, Menu, Typography } from "antd";
 
-//icons
-import { UserOutlined } from "@ant-design/icons";
-import {
-  faRunning,
-  faUsers,
-  faStreetView,
-} from "@fortawesome/free-solid-svg-icons";
+import { faRunning, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 //logo
@@ -26,7 +20,7 @@ function App() {
       <Layout>
         <Header style={styles.header}>
           <Title level={1} style={{ margin: 10 }}>
-            Herogi-StudyCase-RunnerLeaderBoard
+            StudyCase-Runner LeaderBoard
             <img src={logo} style={{ float: "left", margin: 10 }} />
           </Title>
         </Header>
@@ -40,6 +34,7 @@ function App() {
             onCollapse={(collapsed, type) => {
               console.log(collapsed, type);
             }}
+            style={{ backgroundColor: "white" }}
           >
             <Menu theme='light' mode='inline' defaultSelectedKeys={["bests"]}>
               <Menu.Item key='bests'>
@@ -49,7 +44,7 @@ function App() {
                   }}
                   icon={faRunning}
                 />
-                Bests
+                <a href={"https://github.com/mahmutync"}>My LinkedIn Profile</a>
               </Menu.Item>
               <Menu.Item key='allRunners'>
                 <FontAwesomeIcon
@@ -57,17 +52,11 @@ function App() {
                     marginRight: "16",
                   }}
                   icon={faUsers}
-                />
-                All Runners
-              </Menu.Item>
-              <Menu.Item key='12'>
-                <FontAwesomeIcon
-                  style={{
-                    marginRight: "20",
+                  onClick={() => {
+                    "https://github.com/mahmutync";
                   }}
-                  icon={faStreetView}
                 />
-                User Groups
+                <a href={"https://github.com/mahmutync"}>My GitHub</a>
               </Menu.Item>
             </Menu>
           </Sider>
@@ -75,8 +64,8 @@ function App() {
             <Content
               className='site-layout-background'
               style={{
-                padding: 24,
-                margin: 0,
+                padding: 20,
+                margin: 10,
                 minHeight: 280,
               }}
             >

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { List, Avatar } from "antd";
 import axios from "../actions/axios";
+import { Table } from "antd";
 
 const dynamicSort = (property) => {
   var sortOrder = 1;
@@ -15,7 +15,7 @@ const dynamicSort = (property) => {
   };
 };
 
-const Row = ({ title, fetchUrl }) => {
+const Row = () => {
   const [users, setUsers] = useState([]);
   const [pace, setPace] = useState([]);
   const [list, setList] = useState([]);
@@ -56,71 +56,83 @@ const Row = ({ title, fetchUrl }) => {
 
     for (let i = 0; i < pace.length; i++) {
       var speed = (
-        Number(pace[i].distance / 1000) / Number(pace[i].total_time / 60)
+        Number(pace[i].distance / 1000) / Number(pace[i].total_time)
       ).toFixed(2);
 
       tempPace[i].speed = Number(speed);
       tempPace[i].distance = Number(tempPace[i].distance);
       tempPace[i].total_time = Number(tempPace[i].total_time);
+      tempPace[i].username =
+        users[
+          users.findIndex((x) => x.userid === tempPace[i].userid)
+        ]?.username;
+      tempPace[i].age =
+        users[users.findIndex((x) => x.userid === tempPace[i].userid)]?.age;
+      if (tempPace[i].age > 20 && tempPace[i].age < 30) {
+        tempPace[i].ageGroup = "group1";
+      } else if (tempPace[i].age > 30 && tempPace[i].age < 40) {
+        tempPace[i].ageGroup = "group2";
+      } else {
+        tempPace[i].ageGroup = "group3";
+      }
+
       tempArr.push(tempPace[i]);
     }
     let sortedArr = tempArr.sort(dynamicSort(sortedBy));
     setList(sortedArr);
     console.log("SONRASI", sortedArr);
   };
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "username",
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      filters: [
+        {
+          text: "20 - 30",
+          value: "group1",
+        },
+        {
+          text: "30 - 40",
+          value: "group2",
+        },
+        {
+          text: "40+",
+          value: "group3",
+        },
+      ],
+      onFilter: (value, record) => record.ageGroup.indexOf(value) === 0,
+      sorter: dynamicSort("age"),
+    },
+    {
+      title: "Distance",
+      dataIndex: "distance",
+      sorter: dynamicSort("distance"),
+    },
+    {
+      title: "Avg Pace",
+      dataIndex: "speed",
+      defaultSortOrder: "descend",
+      sorter: dynamicSort("speed"),
+    },
+    {
+      title: "Total Time",
+      dataIndex: "total_time",
+      sorter: dynamicSort("total_time"),
+      sortDirections: ["descend", "ascend"],
+    },
+  ];
 
+  function onChange(pagination, filters, sorter, extra) {
+    console.log("params", pagination, filters, sorter, extra);
+  }
   return (
     <div>
-      <button onClick={() => setSortedBy("-speed")}>Speed</button>
-      <button onClick={() => setSortedBy("-distance")}>Distance</button>
-      <button onClick={() => setSortedBy("-total_time")}>Time</button>
-      <List
-        itemLayout='horizontal'
-        dataSource={list}
-        renderItem={(item) => (
-          <List.Item>
-            <List.Item.Meta
-              avatar={
-                <Avatar
-                  src={
-                    "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                  }
-                />
-              }
-              title={
-                <h3>
-                  {
-                    users[users.findIndex((x) => x.userid === item.userid)]
-                      ?.username
-                  }
-                </h3>
-              }
-              description={
-                " UserID : " +
-                item.userid +
-                " - UserName: " +
-                users[users.findIndex((x) => x.userid === item.userid)]
-                  ?.username +
-                " - Speed: " +
-                item.speed +
-                " - Age: " +
-                item.age +
-                " - Time: " +
-                item.total_time +
-                " - Distance: " +
-                item.distance
-              }
-            />
-          </List.Item>
-        )}
-      />
-      {/* <ul>
-        {users.map((user, index) => {
-          return <li>{user.username + " - " + user.userid}</li>;
-        })}
-      </ul> */}
+      <Table columns={columns} dataSource={list} onChange={onChange} />
     </div>
   );
 };
-
 export default Row;
