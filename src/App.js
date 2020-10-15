@@ -3,9 +3,6 @@ import { Button } from "antd";
 import "./App.css";
 import { Layout, Menu, Typography } from "antd";
 
-//api function
-import { getUsers } from "./api/index";
-
 //icons
 import { UserOutlined } from "@ant-design/icons";
 import {
@@ -29,7 +26,7 @@ function App() {
       <Layout>
         <Header style={styles.header}>
           <Title level={1} style={{ margin: 10 }}>
-            Herogi-StudyCase
+            Herogi-StudyCase-RunnerLeaderBoard
             <img src={logo} style={{ float: "left", margin: 10 }} />
           </Title>
         </Header>
@@ -75,12 +72,15 @@ function App() {
             </Menu>
           </Sider>
           <Layout>
-            <Content>
-              <div>
-                <Row title='This is title' fetchUrl='/users' />
-                {/* <Row title='This is title' fetchUrl='/pace' /> */}
-                {/*responseData.length*/}
-              </div>
+            <Content
+              className='site-layout-background'
+              style={{
+                padding: 24,
+                margin: 0,
+                minHeight: 280,
+              }}
+            >
+              <Row title='This is title' fetchUrl='/users' />
             </Content>
 
             {/* <Footer style={{ textAlign: "center" }}>

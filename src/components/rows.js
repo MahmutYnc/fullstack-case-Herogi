@@ -1,39 +1,82 @@
 import React, { useState, useEffect } from "react";
 import { List, Avatar } from "antd";
-import axios from "../api/axios";
-import $ from "jquery";
+import axios from "../actions/axios";
 
-function Row({ title, fetchUrl }) {
+const dynamicSort = (property) => {
+  var sortOrder = 1;
+  if (property[0] === "-") {
+    sortOrder = -1;
+    property = property.substr(1);
+  }
+  return function (a, b) {
+    var result =
+      a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+    return result * sortOrder;
+  };
+};
+
+const Row = ({ title, fetchUrl }) => {
   const [users, setUsers] = useState([]);
   const [pace, setPace] = useState([]);
+  const [list, setList] = useState([]);
+  const [sortedBy, setSortedBy] = useState("speed");
 
   useEffect(() => {
     async function fetchData() {
-      const request = await axios.get("/users");
-      setUsers(request.data);
-      return request;
+      const response = await axios.get("/users");
+      setUsers(response.data);
     }
     fetchData();
   }, []);
 
   useEffect(() => {
     async function fetchData() {
-      const request = await axios.get("/pace");
-      setPace(request.data);
-      return request;
+      const response = await axios.get("/pace");
+      setPace(response.data);
+      console.log("LOG", response.data);
     }
     fetchData();
   }, []);
+
   useEffect(() => {
-    const res = $.extend(true, [], pace, users);
-    console.log(res);
-  }, [pace, users]);
+    if (Array.isArray(pace) && pace.length > 0) {
+      sortByAveragePace(pace);
+    }
+  }, [sortedBy]);
+
+  useEffect(() => {
+    if (Array.isArray(pace) && pace.length > 0) {
+      sortByAveragePace(pace);
+    }
+  }, [pace]);
+
+  const sortByAveragePace = (pace, data2) => {
+    let tempArr = [];
+    let tempPace = pace;
+
+    for (let i = 0; i < pace.length; i++) {
+      var speed = (
+        Number(pace[i].distance / 1000) / Number(pace[i].total_time / 60)
+      ).toFixed(2);
+
+      tempPace[i].speed = Number(speed);
+      tempPace[i].distance = Number(tempPace[i].distance);
+      tempPace[i].total_time = Number(tempPace[i].total_time);
+      tempArr.push(tempPace[i]);
+    }
+    let sortedArr = tempArr.sort(dynamicSort(sortedBy));
+    setList(sortedArr);
+    console.log("SONRASI", sortedArr);
+  };
 
   return (
     <div>
+      <button onClick={() => setSortedBy("-speed")}>Speed</button>
+      <button onClick={() => setSortedBy("-distance")}>Distance</button>
+      <button onClick={() => setSortedBy("-total_time")}>Time</button>
       <List
         itemLayout='horizontal'
-        dataSource={users}
+        dataSource={list}
         renderItem={(item) => (
           <List.Item>
             <List.Item.Meta
@@ -44,8 +87,29 @@ function Row({ title, fetchUrl }) {
                   }
                 />
               }
-              title={<a href='https://herogi.com/'>{item.username}</a>}
-              description={item.username}
+              title={
+                <h3>
+                  {
+                    users[users.findIndex((x) => x.userid === item.userid)]
+                      ?.username
+                  }
+                </h3>
+              }
+              description={
+                " UserID : " +
+                item.userid +
+                " - UserName: " +
+                users[users.findIndex((x) => x.userid === item.userid)]
+                  ?.username +
+                " - Speed: " +
+                item.speed +
+                " - Age: " +
+                item.age +
+                " - Time: " +
+                item.total_time +
+                " - Distance: " +
+                item.distance
+              }
             />
           </List.Item>
         )}
@@ -57,6 +121,6 @@ function Row({ title, fetchUrl }) {
       </ul> */}
     </div>
   );
-}
+};
 
 export default Row;
